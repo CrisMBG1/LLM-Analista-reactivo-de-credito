@@ -4,4 +4,5 @@ pypdf
 reportlab
 openai
 python-dotenv
+streamlit
 reportlab

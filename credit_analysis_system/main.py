@@ -54,31 +54,31 @@ def main():
     print("\n[2/3] Constructing Analysis Prompt...")
     
     prompt = f"""
-    # Credit Admission Request Analysis
+    # Análisis de Solicitud de Aprobación de Crédito
 
-    ## 1. Applicant Profile
+    ## 1. Perfil del Solicitante
     {credit_data}
 
-    ## 2. Bureau Score
-    Score: {bureau_score} (Scale: 300-850, >650 is generally good)
+    ## 2. Puntaje en Buró de Crédito
+    Puntaje: {bureau_score} (Escala: 300-850, >650 generalmente se considera bueno)
 
-    ## 3. Macroeconomic Context
+    ## 3. Contexto Macroeconómico
     {macro_text}
 
-    ## 4. Company Annual Report Summary
-    {company_report_text[:2000]}... (truncated if too long)
+    ## 4. Resumen del Reporte Anual de la Empresa
+    {company_report_text[:2000]}... (truncado si es demasiado largo)
 
-    ## Task
-    Analyze the above information to determine if the credit should be approved.
-    
-    Please provide:
-    1. **Executive Summary**: Brief overview of the risk.
-    2. **Key Strengths**: Simulation of positive factors.
-    3. **Key Risks**: Negative factors.
-    4. **Recommendation**: APPROVE, DENY, or CONDITIONALLY APPROVE.
-    5. **Conditions (if applicable)**.
+    ## Tarea
+    Analiza la información anterior para determinar si el crédito debe ser aprobado.
 
-    Output format: Markdown.
+    Por favor proporciona:
+    1. **Resumen Ejecutivo**: Visión general breve del nivel de riesgo.
+    2. **Fortalezas Clave**: Simulación de factores positivos.
+    3. **Riesgos Clave**: Factores negativos.
+    4. **Recomendación**: APROBAR, RECHAZAR o APROBACIÓN CONDICIONADA.
+    5. **Condiciones (si aplica)**.
+
+    Formato de salida: Markdown.
     """
 
     # 3. LLM Analysis
