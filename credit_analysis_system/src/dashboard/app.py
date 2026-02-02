@@ -20,7 +20,7 @@ st.set_page_config(
 )
 
 # Título y Header
-st.title("🏦 Sistema Ejecutivo de Análisis de Crédito")
+st.title("🏦 Sistema de Análisis de Crédito")
 st.markdown("---")
 
 # Sidebar
@@ -93,24 +93,27 @@ if credit_data:
                 # Construir Prompt
                 bureau_score = 680 # Simulado
                 prompt = f"""
-                # Credit Admission Request Analysis
+                # Análisis de Solicitud de Aprobación de Crédito
 
-                ## 1. Applicant Profile
+                ## 1. Perfil del Solicitante
                 {credit_data}
 
-                ## 2. Bureau Score
-                Score: {bureau_score} (Scale: 300-850, >650 is generally good)
+                ## 2. Puntaje en Buró de Crédito
+                Puntaje: {bureau_score} (Escala: 300-850, >650 generalmente se considera bueno)
 
-                ## 3. Macroeconomic Context
+                ## 3. Contexto Macroeconómico
                 {macro_md_text}
 
-                ## 4. Company Annual Report Summary
+                ## 4. Resumen del Informe Anual de la Empresa
                 {pdf_text[:3000]}...
 
-                ## Task
-                Analyze the above information to determine if the credit should be approved.
-                Generate a professional executive report.
+                ## Tarea
+                Analiza la información anterior para determinar si el crédito debe ser aprobado.
+                Genera un informe ejecutivo profesional.
+                
+                IMPORTANTE: RESPONDER ÚNICAMENTE EN ESPAÑOL.
                 """
+
                 
                 # Ejecutar LLM
                 llm = LocalLLMClient(model=model_name)
