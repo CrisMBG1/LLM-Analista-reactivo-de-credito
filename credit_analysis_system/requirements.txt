@@ -1,0 +1,7 @@
+pandas
+openpyxl
+pypdf
+reportlab
+openai
+python-dotenv
+reportlab
