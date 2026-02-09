@@ -1,7 +1,13 @@
 from openai import OpenAI
 
+import os
+
 class CreditCommittee:
-    def __init__(self, base_url="http://localhost:11434/v1"):
+    def __init__(self, base_url=None):
+        # Allow env var override for Docker
+        if base_url is None:
+            base_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434/v1")
+        
         self.api_key = "ollama"
         self.base_url = base_url
     

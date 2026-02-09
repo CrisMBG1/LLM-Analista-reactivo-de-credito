@@ -3,10 +3,8 @@ import pandas as pd
 import os
 import sys
 
-# Add parent dir to path to import modules
-current_dir = os.path.dirname(os.path.abspath(__file__))
-parent_dir = os.path.dirname(os.path.dirname(current_dir))
-sys.path.append(parent_dir)
+# Add current dir to path
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from src.ingestion.loaders import DataLoader
 from src.ingestion.pdf_processor import PDFProcessor
@@ -32,8 +30,8 @@ model_a_name = st.sidebar.text_input("Analista A (Numérico)", value="deepseek-r
 model_b_name = st.sidebar.text_input("Analista B (Cualitativo)", value="gemma3:1b")
 model_boss_name = st.sidebar.text_input("Gerente (Decisor)", value="llama3")
 
-# Rutas de datos
-DATA_DIR = os.path.join(parent_dir, 'data')
+# Rutas de datos (Ahora en ./data)
+DATA_DIR = 'data'
 credit_app_path = os.path.join(DATA_DIR, 'solicitud_credito.xlsx')
 macro_data_path = os.path.join(DATA_DIR, 'datos_macro.xlsx')
 report_pdf_path = os.path.join(DATA_DIR, 'reporte_empresa.pdf')
@@ -153,9 +151,9 @@ if credit_data:
             with st.expander("Leer Dictamen Completo", expanded=True):
                 st.markdown(body_final)
             
-            # Generar PDF (Usamos el texto completo)
+            # Generar PDF
             pdf_filename = "Dictamen_Final.pdf"
-            pdf_path = os.path.join(parent_dir, 'src', 'reporting', pdf_filename)
+            pdf_path = os.path.join(os.getcwd(), 'src', 'reporting', pdf_filename)
             
             # Ensure dir exists
             os.makedirs(os.path.dirname(pdf_path), exist_ok=True)

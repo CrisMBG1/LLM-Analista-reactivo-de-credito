@@ -1,75 +1,63 @@
-# Sistema de Análisis de Crédito con IA
+# Sistema de Análisis de Crédito Multi-Agente 🤖🏦
 
-Este proyecto automatiza el análisis de solicitudes de crédito empresarial utilizando un LLM local (Ollama). Integra datos de excel, reportes en PDF y datos macroeconómicos para generar una recomendación de riesgo.
+Este sistema utiliza un **Comité de Inteligencia Artificial** para evaluar solicitudes de crédito empresarial.
+Tres modelos (Deepseek, Gemma y Llama3) colaboran para analizar datos financieros, macroeconómicos y reportes PDF, emitiendo un dictamen final.
 
-## 📋 Características
-- **Ingesta Muti-fuente**: Lee Excel (solicitudes, datos macro) y PDF (reportes anuales).
-- **Análisis con IA Local**: Usa Ollama (Llama 3 u otros) para privacidad y control.
-- **Dashboard Web**: Interfaz ejecutiva moderna para visualizar datos y resultados.
-- **Reportes Automáticos**: Genera un archivo Markdown con el análisis de riesgo.
+## 🌟 Características Principales
+- **Arquitectura de Comité**:
+    - **Analista A (Deepseek-r1:8b)**: Enfoque numérico/lógico.
+    - **Analista B (Gemma3:1b)**: Enfoque cualitativo/resumen.
+    - **Gerente (Llama3)**: Toma la decisión final y sintetiza.
+- **Dashboard Interactivo**: Interfaz web (Streamlit) para visualizar el proceso de "pensamiento".
+- **Generación de PDF**: Crea un dictamen oficial descargable.
+- **Soporte Docker**: Contenerizado para ejecución aislada y fácil despliegue.
 
-## 🚀 Instalación y Uso
+---
 
-### Prerrequisitos
-1.  **Python 3.8+** ([Descargar](https://www.python.org/downloads/)) - *Asegúrate de marcar "Add to PATH" al instalar*.
-2.  **Ollama** ([Descargar](https://ollama.com)) - Con el modelo `llama3` descargado (`ollama pull llama3`).
+## 🚀 Guía de Ejecución Rápida
 
-### ⚡ Ejecución Rápida (Recomendado)
+### Opción A: Windows (Sin instalar nada extra)
+Si ya tienes Python y Ollama instalados en tu PC:
 
-1.  **Configuración Inicial**:
-    Dale doble clic a **`setup.bat`**. (Solo necesitas hacerlo la primera vez).
-    *Instalará librerías y generará datos de prueba.*
+1.  **Ejecuta `setup.bat`** (Doble click) -> Instala librerías y genera datos.
+2.  **Ejecuta `run_dashboard.bat`** (Doble click) -> Abre el sistema en tu navegador.
 
-2.  **Iniciar el Sistema**:
-    Dale doble clic a **`run_dashboard.bat`**.
-    *Abrirá automáticamente el Dashboard en tu navegador.*
+### Opción B: Docker (Recomendado para aislamiento)
+Si tienes Docker Desktop instalado:
 
-### 👨‍💻 Ejecución Manual (Para desarrolladores)
-Si prefieres usar la terminal:
-
-1.  Instalar dependencias:
+1.  Abre una terminal en esta carpeta.
+2.  Construye y levanta el contenedor:
     ```bash
-    pip install -r requirements.txt
+    docker-compose up --build
     ```
-2.  Generar datos de prueba:
-    ```bash
-    python tools/generate_dummy_data.py
-    ```
-3.  **Opción A: Servidor Web (Dashboard)**
-    ```bash
-    streamlit run src/dashboard/app.py
-    ```
-4.  **Opción B: Solo Consola**
-    ```bash
-    python main.py
-    ```
+3.  Abre tu navegador en:
+    👉 **http://localhost:8501**
 
-## 📂 Estructura del Código
+> **Nota sobre Docker y Ollama**: El sistema está configurado para conectarse automáticamente a tu Ollama local (en Windows) a través de la red interna de Docker (`host.docker.internal`). No necesitas instalar Ollama dentro del contenedor.
+
+---
+
+## 📂 Estructura del Proyecto (Simplificada)
 
 ```text
 credit_analysis_system/
-├── data/                   # Archivos de entrada (Excel, PDF)
+├── app.py                  # APLICACIÓN PRINCIPAL (Dashboard)
+├── data/                   # Datos de entrada (Excel, PDF)
 ├── src/
-│   ├── analysis/           # Lógica de conexión con el LLM
-│   │   └── llm_client.py
-│   ├── ingestion/          # Scripts para leer archivos
-│   │   ├── loaders.py      # Lee Excel/CSV
-│   │   └── pdf_processor.py # Extrae texto de PDFs
-│   └── reporting/          # Carpeta de salida de reportes
-├── tools/
-│   └── generate_dummy_data.py # Generador de datos ficticios
-├── main.py                 # Script principal (Orquestador)
-├── requirements.txt        # Lista de dependencias
-└── setup.bat               # Autoconfiguración para Windows
+│   ├── analysis/           # Cerebro (Lógica Multi-Agente)
+│   ├── ingestion/          # Lectores de datos
+│   └── reporting/          # Generadores de PDF
+├── tools/                  # Generador de datos ficticios
+├── docs/                   # Documentación y Diagramas
+├── Dockerfile              # Definición de la imagen Docker
+├── docker-compose.yml      # Orquestación de servicios
+└── requirements.txt        # Dependencias Python
 ```
 
-## 🛠 Solución de Problemas COMMON
-
-| Error | Solución |
-|-------|----------|
-| `'python' no se reconoce...` | Reinstala Python y marca **"Add Python to PATH"**. Reinicia tu PC. |
-| `model 'llama3' not found` | Abre una terminal y ejecuta `ollama pull llama3`. |
-| `Connection refused` | Asegúrate de que Ollama esté corriendo (icono en la barra de tareas). |
-
----
-**Nota**: Para una explicación más técnica del flujo de datos, consulta el archivo `EXPLICACION_CODIGO.md`.
+## 🛠 Modelos Requeridos (Ollama)
+Asegúrate de tener descargados estos modelos en tu terminal:
+```bash
+ollama pull deepseek-r1:8b
+ollama pull gemma3:1b
+ollama pull llama3
+```

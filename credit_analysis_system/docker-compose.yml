@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  credit-dashboard:
+    build: .
+    ports:
+      - "8501:8501"
+    environment:
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434/v1
+    volumes:
+      - ./data:/app/data
+      - ./src/reporting:/app/src/reporting
+    # 'host.docker.internal' works on Windows/Mac to access the host machine
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
