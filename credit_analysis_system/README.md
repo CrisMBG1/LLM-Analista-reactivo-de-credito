@@ -3,6 +3,8 @@
 Este sistema utiliza un **Comité de Inteligencia Artificial** para evaluar solicitudes de crédito empresarial.
 Tres modelos (Deepseek, Gemma y Llama3) colaboran para analizar datos financieros, macroeconómicos y reportes PDF, emitiendo un dictamen final.
 
+![Diagrama de Arquitectura](./Diagrama.png)
+
 ## 🌟 Características Principales
 - **Arquitectura de Comité**:
     - **Analista A (Deepseek-r1:8b)**: Enfoque numérico/lógico.
