@@ -23,13 +23,12 @@
 Ejecuta el archivo **`setup.bat`** (doble clic) para instalar librerías y generar datos.
 
 ### 2. Ejecutar el Dashboard (Web)
-Para ver la interfaz gráfica recomendada:
+La forma más fácil es hacer doble clic en el archivo:
+👉 **`run_dashboard.bat`**
+
+Si prefieres usar la terminal manualmente:
 ```bash
 python -m streamlit run src/dashboard/app.py
-```
-O si tienes streamlit en el PATH:
-```bash
-streamlit run src/dashboard/app.py
 ```
 
 ### 3. Ejecutar Análisis por Consola (Opcional)

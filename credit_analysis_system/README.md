@@ -5,6 +5,7 @@ Este proyecto automatiza el análisis de solicitudes de crédito empresarial uti
 ## 📋 Características
 - **Ingesta Muti-fuente**: Lee Excel (solicitudes, datos macro) y PDF (reportes anuales).
 - **Análisis con IA Local**: Usa Ollama (Llama 3 u otros) para privacidad y control.
+- **Dashboard Web**: Interfaz ejecutiva moderna para visualizar datos y resultados.
 - **Reportes Automáticos**: Genera un archivo Markdown con el análisis de riesgo.
 
 ## 🚀 Instalación y Uso
@@ -13,26 +14,35 @@ Este proyecto automatiza el análisis de solicitudes de crédito empresarial uti
 1.  **Python 3.8+** ([Descargar](https://www.python.org/downloads/)) - *Asegúrate de marcar "Add to PATH" al instalar*.
 2.  **Ollama** ([Descargar](https://ollama.com)) - Con el modelo `llama3` descargado (`ollama pull llama3`).
 
-### Configuración Rápida (Windows)
-Simplemente ejecuta el archivo **`setup.bat`** incluido en la carpeta. Este script:
-1.  Verifica tu instalación de Python.
-2.  Instala las librerías necesarias (`pandas`, `openpyxl`, `openai`, etc.).
-3.  Genera datos de prueba si no existen.
+### ⚡ Ejecución Rápida (Recomendado)
 
-### Ejecución Manual
+1.  **Configuración Inicial**:
+    Dale doble clic a **`setup.bat`**. (Solo necesitas hacerlo la primera vez).
+    *Instalará librerías y generará datos de prueba.*
+
+2.  **Iniciar el Sistema**:
+    Dale doble clic a **`run_dashboard.bat`**.
+    *Abrirá automáticamente el Dashboard en tu navegador.*
+
+### 👨‍💻 Ejecución Manual (Para desarrolladores)
+Si prefieres usar la terminal:
+
 1.  Instalar dependencias:
     ```bash
     pip install -r requirements.txt
     ```
-2.  Generar datos de prueba (opcional):
+2.  Generar datos de prueba:
     ```bash
     python tools/generate_dummy_data.py
     ```
-3.  **Correr el análisis**:
+3.  **Opción A: Servidor Web (Dashboard)**
+    ```bash
+    streamlit run src/dashboard/app.py
+    ```
+4.  **Opción B: Solo Consola**
     ```bash
     python main.py
     ```
-    El reporte se guardará en `src/reporting/credit_report.md`.
 
 ## 📂 Estructura del Código
 
