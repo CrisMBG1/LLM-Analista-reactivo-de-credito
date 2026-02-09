@@ -26,23 +26,30 @@ class CreditCommittee:
         Gets an initial analysis from a junior analyst model (Deepseek/Gemma).
         """
         sys_prompt = """
-        Eres un Analista de Riesgo Crediticio Junior.
-        Tu trabajo es revisar los datos y dar una opinión técnica, enfocada en los números y hechos.
-        Sé crítico y directo. Responde SIEMPRE en Español.
+        Eres un sistema de análisis de riesgo crediticio avanzado.
+        Tu trabajo es revisar los datos y dar una opinión técnica objetiva.
+        
+        IMPORTANTE:
+        1. No saludes ni te presentes.
+        2. Al final de tu respuesta, DEBES incluir una línea exacta que diga "=== CONCLUSIÓN ===" seguida de un resumen de 2 líneas.
+        3. Responde SIEMPRE en Español.
         """
         return self._call_model(model_name, sys_prompt, data_prompt)
 
     def get_manager_decision(self, model_name, data_prompt, opinion_a, opinion_b):
         """
-        Gets the final decision from the senior manager model (Llama3).
+        Gets the final decision.
         Synthesizes the opinions A and B.
         """
         sys_prompt = """
-        Eres el Gerente de Aprobación de Créditos Senior.
-        Tu trabajo es leer los reportes de tus dos analistas y los datos originales para emitir el DICTAMEN FINAL.
-        Debes decidir si se APRUEBA o RECHAZA el crédito.
-        Genera un reporte muy profesional, bien estructurado en Markdown.
-        Responde SIEMPRE en Español.
+        Eres un sistema de decisión de créditos.
+        Tu trabajo es sintetizar los reportes y los datos para emitir el dictamen final.
+        Analiza objetivamente sin roles ni teatro.
+        
+        IMPORTANTE:
+        1. No incluyas firmas, nombres de cargos (como "Gerente") ni despedidas.
+        2. Al final de tu respuesta, DEBES incluir una línea exacta que diga "=== CONCLUSIÓN ===" seguida de la decisión final clara (Aprobado/Rechazado) y el motivo principal.
+        3. Responde SIEMPRE en Español.
         """
         
         final_prompt = f"""
@@ -50,18 +57,18 @@ class CreditCommittee:
         {data_prompt}
 
         ---
-        # REPORTE ANALISTA 1 (Deepseek)
+        # REPORTE 1 (Análisis Numérico)
         {opinion_a}
 
         ---
-        # REPORTE ANALISTA 2 (Gemma)
+        # REPORTE 2 (Análisis Cualitativo)
         {opinion_b}
 
         ---
         # TU TAREA
-        1. Evalúa la consistencia entre los dos analistas.
+        1. Evalúa la consistencia entre los análisis.
         2. Decide si otorgar el crédito.
-        3. Escribe el Reporte Final Oficial de la empresa.
+        3. Genera el Dictamen Final sin adornos personales.
         """
         
         return self._call_model(model_name, sys_prompt, final_prompt)

@@ -61,18 +61,39 @@ def load_data():
 credit_data, macro_df, pdf_text, macro_md_text = load_data()
 
 if credit_data:
-    # --- Vista de Datos ---
-    with st.expander("📂 Ver Datos de Entrada", expanded=False):
-        c1, c2 = st.columns(2)
-        with c1:
-            st.write("**Datos Solicitud**")
+    # --- Vista Ejecutiva de Datos ---
+    st.subheader("� Información del Cliente y Contexto")
+    
+    # Contenedor superior
+    c_info, c_macro = st.columns([3, 2])
+    
+    with c_info:
+        st.markdown("**Solicitud de Crédito**")
+        if isinstance(credit_data, dict):
+            # Formatear bonito como tabla HTML o st.dataframe limpio
+            df_cred = pd.DataFrame(list(credit_data.items()), columns=["Concepto", "Detalle"])
+            st.dataframe(df_cred, hide_index=True, use_container_width=True)
+        else:
             st.write(credit_data)
-        with c2:
-            st.write("**Datos Macro**")
-            st.dataframe(macro_df, hide_index=True)
+
+    with c_macro:
+        st.markdown("**Indicadores Económicos (Colombia)**")
+        st.dataframe(macro_df, hide_index=True, use_container_width=True)
+        
+        st.markdown("**Resumen Reporte Anual**")
+        st.caption(f"{pdf_text[:300]}...") # Mostrar un fragmento pequeño
+
 
     # --- Sección de Análisis ---
     st.markdown("### 🧠 Sala de Decisiones")
+    
+    # Helper para extraer conclusión
+    def extract_conclusion(text):
+        if "=== CONCLUSIÓN ===" in text:
+            parts = text.split("=== CONCLUSIÓN ===")
+            return parts[0], parts[1].strip()
+        return text, "No se encontró una conclusión explícita."
+
     
     analyze_btn = st.button("Iniciar Sesión del Comité", type="primary", use_container_width=True)
 
@@ -90,43 +111,56 @@ if credit_data:
         """
 
         # 1. Analista A (Deepseek)
-        with st.status("Analista A pensando...", expanded=True) as status:
-            st.write(f"Consultando a **{model_a_name}**...")
-            opinion_a = committee.get_analyst_opinion(model_a_name, base_prompt)
-            status.update(label="Analista A terminó", state="complete", expanded=False)
+        with st.status(f"Analizando con {model_a_name}...", expanded=True) as status:
+            raw_opinion_a = committee.get_analyst_opinion(model_a_name, base_prompt)
+            body_a, conclusion_a = extract_conclusion(raw_opinion_a)
+            status.update(label=f"{model_a_name} terminó", state="complete", expanded=False)
         
         # 2. Analista B (Gemma)
-        with st.status("Analista B pensando...", expanded=True) as status:
-            st.write(f"Consultando a **{model_b_name}**...")
-            opinion_b = committee.get_analyst_opinion(model_b_name, base_prompt)
-            status.update(label="Analista B terminó", state="complete", expanded=False)
+        with st.status(f"Analizando con {model_b_name}...", expanded=True) as status:
+            raw_opinion_b = committee.get_analyst_opinion(model_b_name, base_prompt)
+            body_b, conclusion_b = extract_conclusion(raw_opinion_b)
+            status.update(label=f"{model_b_name} terminó", state="complete", expanded=False)
 
         # Mostrar Opiniones Preliminares
+        st.subheader("🔎 Análisis Preliminares")
         col_a, col_b = st.columns(2)
+        
         with col_a:
-            st.info(f"### Opinión {model_a_name}")
-            st.markdown(opinion_a)
+            st.markdown(f"**Modelo:** {model_a_name}")
+            with st.expander("Ver Análisis Completo"):
+                st.markdown(body_a)
+            st.info(f"**Conclusión:**\n\n{conclusion_a}")
+            
         with col_b:
-            st.info(f"### Opinión {model_b_name}")
-            st.markdown(opinion_b)
+            st.markdown(f"**Modelo:** {model_b_name}")
+            with st.expander("Ver Análisis Completo"):
+                st.markdown(body_b)
+            st.info(f"**Conclusión:**\n\n{conclusion_b}")
 
         st.divider()
 
-        # 3. Gerente (Llama3)
-        with st.spinner(f"El Gerente ({model_boss_name}) está deliberando..."):
-            final_verdict = committee.get_manager_decision(model_boss_name, base_prompt, opinion_a, opinion_b)
+        # 3. Gerente (Llama3) - Síntesis
+        with st.spinner(f"Generando Dictamen Final ({model_boss_name})..."):
+            final_raw = committee.get_manager_decision(model_boss_name, base_prompt, raw_opinion_a, raw_opinion_b)
+            body_final, conclusion_final = extract_conclusion(final_raw)
             
-            st.success("### 🏆 Dictamen Final del Comité")
-            st.markdown(final_verdict)
+            st.header("🏆 Dictamen Final")
             
-            # Generar PDF
+            # Recuadro de Conclusión Final (Más destacado)
+            st.success(f"### � DECISIÓN FINAL\n\n{conclusion_final}")
+            
+            with st.expander("Leer Dictamen Completo", expanded=True):
+                st.markdown(body_final)
+            
+            # Generar PDF (Usamos el texto completo)
             pdf_filename = "Dictamen_Final.pdf"
             pdf_path = os.path.join(parent_dir, 'src', 'reporting', pdf_filename)
             
             # Ensure dir exists
             os.makedirs(os.path.dirname(pdf_path), exist_ok=True)
             
-            PDFReportGenerator.create_pdf(pdf_path, final_verdict)
+            PDFReportGenerator.create_pdf(pdf_path, final_raw)
             
             with open(pdf_path, "rb") as f:
                 st.download_button(
